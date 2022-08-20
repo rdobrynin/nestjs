@@ -15,7 +15,7 @@ services:
       - /usr/src/app/node_modules
     ports:
       - ${SERVER_PORT}:${SERVER_PORT}
-      - 9229:9229
+      - "9229:9229"
     entrypoint: ["npm", "run", "start:${NODE_ENV}"]
     env_file:
       - .env
@@ -51,17 +51,6 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
-  pgadmin:
-    links:
-      - postgres:postgres
-    container_name: nestjs_pgadmin
-    image: dpage/pgadmin4
-    volumes:
-      - ./pgdata/pgadmin:/root/.pgadmin
-    env_file:
-      - .env
-    networks:
-      - nestjs_net
 networks:
   nestjs_net:
 volumes:
