@@ -15,7 +15,7 @@ export class CardDto {
     return {
       value: card.rank as string,
       suit: card.suit as string,
-      code: `${card.rank[0]} ${card.suit[0]}`,
+      code: `${String(card.rank)[0]}${String(card.suit[0])}`,
     };
   }
 }

@@ -67,12 +67,23 @@ export class DeckService {
       throw new ExceedLimitCardsException();
     }
 
-    deckEntity.cards = _.slice(deckEntity.cards, drawCardDto.amount);
+    const cards = deckEntity.cards.slice(
+      drawCardDto.amount,
+      deckEntity.cards.length,
+    );
 
     await this.deckEntityRepository.save(deckEntity);
+    await this.deckEntityRepository
+      .createQueryBuilder()
+      .update()
+      .set({ cards: cards })
+      .where('id = :deckId', {
+        deckId: drawCardDto.deckId,
+      })
+      .execute();
 
     return plainToClass(CardDtos, {
-      cards: _.map(deckEntity.cards, CardDto.toDto),
+      cards: _.map(cards, CardDto.toDto),
     });
   }
 

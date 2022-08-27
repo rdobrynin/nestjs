@@ -1,8 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { DeckSize, DeckType } from "../../constants";
+import { DeckType } from '../../constants';
 import { AbstractDto } from '../../common/dto';
 import { IDeck } from '../interfaces/IDeck';
 import { Card } from '../card';
+import { CardDto } from './card.dto';
+import * as _ from 'lodash';
 
 export class DeckDto extends AbstractDto {
   @ApiProperty()
@@ -25,9 +27,7 @@ export class DeckDto extends AbstractDto {
     this.deckId = entity.id;
     this.type = entity.type;
     this.shuffled = entity.isShuffled;
-    this.cards = entity.cards;
-    this.remaining = DeckType.SHORT
-      ? Number(DeckSize.SHORT) - entity.cards.length
-      : Number(DeckSize.FULL) - entity.cards.length;
+    this.cards = _.map(entity.cards, CardDto.toDto);
+    this.remaining = entity.cards.length;
   }
 }
