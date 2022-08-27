@@ -4,14 +4,8 @@ import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as basicAuth from 'express-basic-auth';
 import { DeckModule } from './deck/deck.module';
-import {
-  initializeTransactionalContext,
-  patchTypeORMRepositoryWithBaseRepository,
-} from 'typeorm-transactional-cls-hooked';
 
 async function bootstrap() {
-  initializeTransactionalContext();
-  // patchTypeORMRepositoryWithBaseRepository();
   const app = await NestFactory.create(DeckModule);
   const configService = app.get<ConfigService>(ConfigService);
 
