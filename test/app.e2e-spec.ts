@@ -1,55 +1,79 @@
-import * as request from 'supertest';
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
-import { DeckController } from '../src/deck/deck.controller';
 import { DeckService } from '../src/deck/deck.service';
+import { DeckType } from '../src/constants';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { DeckEntity } from '../src/deck/deck.entity';
-import { DeckType } from '../src/constants';
-import { DeckModule } from '../src/deck/deck.module';
+import * as sinon from 'sinon';
+import { Repository } from 'typeorm';
+import { DrawCardDto } from '../src/deck/dto/draw-card.dto';
 
-describe('DeckController (e2e)', () => {
-  let app: INestApplication;
+describe('Testing app.service', () => {
+  let module: TestingModule;
+  let service: DeckService;
 
+  class SpyRepo {
+    save(deckEntity: DeckEntity) {
+      return deckEntity;
+    }
+    findOneBy(deckEntity: DeckEntity) {
+      return deckEntity;
+    }
+  }
+
+  const mockProviders = [
+    {
+      provide: getRepositoryToken(DeckEntity),
+      useClass: SpyRepo,
+      useValue: sinon.createStubInstance(Repository),
+    },
+  ];
+
+  const sandbox = sinon.createSandbox();
   beforeAll(async () => {
-    const moduleRef = await Test.createTestingModule({
-      imports: [DeckModule],
+    // build up testing module
+    module = await Test.createTestingModule({
+      imports: [],
+      providers: [...mockProviders, DeckService],
     })
-      .overrideProvider(DeckService)
-      .useValue(DeckService)
-      .compile();
-    app = moduleRef.createNestApplication();
-    await app.init();
+      .compile()
+      .catch((err) => {
+        console.error(err);
+        throw err;
+      });
+
+    service = module.get<DeckService>(DeckService);
   });
 
-  it('Test invalid request data for endpoints', async () => {
-    await request(app.getHttpServer())
-      .post('/api/deck')
-      .send({ type: 'invalid value', shuffled: true })
-      .expect(404);
-
-    await request(app.getHttpServer()).get(`/api/deck/invalidUuid`).expect(404);
-
-    await request(app.getHttpServer())
-      .post('/api/deck/draw')
-      .send({ deckId: 'wrong-uid', amount: 2 })
-      .expect(404);
+  it('Should be defined POST createDeck  and called with', async () => {
+    const createDeskSpy = jest.spyOn(service, 'createDeck');
+    await service.createDeck({
+      type: DeckType.FULL,
+      shuffled: true,
+    });
+    expect(createDeskSpy).toHaveBeenCalledWith({
+      type: DeckType.FULL,
+      shuffled: true,
+    });
   });
 
-  it('Test valid request data for endpoints', async () => {
-    await request(app.getHttpServer())
-      .post('/api/deck')
-      .send({ type: DeckType.FULL, shuffled: true })
-      .expect(201);
+  it('Should be defined GET getById and called with', async () => {
+    const getByIdSpy = jest.spyOn(service, 'getById');
+    const deskId = '549b4b17-467c-415c-93fa-a33586424bd5';
+    await service.getById(deskId);
+    expect(getByIdSpy).toHaveBeenCalledWith(deskId);
+  });
 
-    await request(app.getHttpServer())
-      .get(`/api/deck/549b4b17-467c-415c-93fa-a33586424bd5`)
-      .expect(200);
-
-    await request(app.getHttpServer()).post('/api/deck/draw').expect(200);
+  it('Should be defined POST drawCard and called with', async () => {
+    const getByIdSpy = jest.spyOn(service, 'drawCard');
+    const drawCard: DrawCardDto = {
+      deckId: '549b4b17-467c-415c-93fa-a33586424bd5',
+      amount: 2,
+    };
+    await service.drawCard(drawCard);
+    expect(getByIdSpy).toHaveBeenCalledWith(drawCard);
   });
 
   afterAll(async () => {
-    await app.close();
+    sandbox.restore();
   });
 });
