@@ -1,19 +1,15 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiHideProperty } from '@nestjs/swagger';
 
 import type { IAbstractEntity } from '../entities';
 
 export class AbstractDto {
-  @ApiProperty()
-  id: string;
-
-  @ApiProperty()
+  @ApiHideProperty()
   createdAt: Date;
 
-  @ApiProperty()
+  @ApiHideProperty()
   updatedAt: Date;
 
   constructor(entity: IAbstractEntity<AbstractDto>) {
-    this.id = entity.id;
     this.createdAt = entity.createdAt;
     this.updatedAt = entity.updatedAt;
   }

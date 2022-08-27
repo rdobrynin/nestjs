@@ -2,14 +2,13 @@ version: '3.7'
 
 services:
   main:
-    container_name: ta_cards_main
+    container_name: ta_main
     build:
       context: .
       target: development
     command: npm run start:dev
     depends_on:
       - postgres
-      - redis
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
@@ -20,27 +19,15 @@ services:
     env_file:
       - .env
     networks:
-      - games_net
+      - ta_net
     restart: unless-stopped
 
-  redis:
-    image: redis
-    container_name: ta_cards_redis
-    networks:
-      - games_net
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis-data:/data
-    entrypoint: redis-server --appendonly yes
-    restart: always
-
   postgres:
-    container_name: ta_cards_postgres
+    container_name: ta_postgres
     image: postgres:12
     restart: always
     networks:
-      - games_net
+      - ta_net
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -51,8 +38,26 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: ta_pgadmin
+    restart: always
+    networks:
+      - ta_net
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+    depends_on:
+      - postgres
+    links:
+      - postgres
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+
 networks:
-  games_net:
+  ta_net:
 volumes:
   pgdata:
-  redis-data:
+  pgadmin-data:

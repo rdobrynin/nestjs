@@ -1,18 +1,31 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { DeckType } from '../../constants';
 import { AbstractDto } from '../../common/dto';
-import { IDeck } from '../../common/interfaces/IDeck';
+import { IDeck } from '../interfaces/IDeck';
+import { Card } from '../card';
 
 export class DeckDto extends AbstractDto {
+  @ApiProperty()
+  deckId: string;
+
   @ApiProperty({ type: 'enum', enum: DeckType })
   type: DeckType;
 
   @ApiProperty({ type: Boolean })
-  isShuffled: boolean;
+  shuffled: boolean;
+
+  @ApiProperty({ type: Boolean })
+  cards: Card[];
+
+  @ApiProperty({ type: Number })
+  remaining: number;
 
   constructor(entity: IDeck) {
     super(entity);
+    this.deckId = entity.id;
     this.type = entity.type;
-    this.isShuffled = entity.isShuffled;
+    this.shuffled = entity.isShuffled;
+    this.cards = entity.cards;
+    this.remaining = entity.cards.length;
   }
 }

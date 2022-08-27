@@ -3,6 +3,7 @@ import { DeckController } from './deck.controller';
 import { DeckService } from './deck.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { DeckEntity } from "./deck.entity";
 
 @Module({
   imports: [
@@ -10,6 +11,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       isGlobal: true,
       envFilePath: ['.env', '.env.dev', '.env.stage', '.env.prod'],
     }),
+    TypeOrmModule.forFeature([DeckEntity]),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
