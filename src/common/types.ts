@@ -5,9 +5,3 @@ export type Plain<T> = T;
 export type Constructor<T, Arguments extends unknown[] = unknown[]> = new (
   ...arguments_: Arguments
 ) => T;
-
-declare global {
-  interface Array<T> {
-    toDtos<T>(options?: any): T;
-  }
-}

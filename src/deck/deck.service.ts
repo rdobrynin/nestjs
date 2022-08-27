@@ -41,8 +41,10 @@ export class DeckService {
   }
 
   async getById(id: string): Promise<DeckDto> {
-    const deckEntity: DeckEntity = await this.deckEntityRepository.findOneBy({
-      id: id,
+    const deckEntity: DeckEntity = await this.deckEntityRepository.findOne({
+      where: {
+        id: id,
+      },
     });
 
     if (!deckEntity) {

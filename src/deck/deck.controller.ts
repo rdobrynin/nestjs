@@ -34,7 +34,7 @@ export class DeckController {
     type: DeckDto,
     description: 'Get deck by ID',
   })
-  async getById(@Param('uid') id: string): Promise<DeckDto> {
+  async getById(@Param('uuid') id: string): Promise<DeckDto> {
     return this.cardDeckService.getById(id);
   }
 
