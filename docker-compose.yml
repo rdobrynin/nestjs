@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   main:
-    container_name: nestjs_main
+    container_name: ta_cards_main
     build:
       context: .
       target: development
@@ -20,14 +20,14 @@ services:
     env_file:
       - .env
     networks:
-      - nestjs_net
+      - games_net
     restart: unless-stopped
 
   redis:
     image: redis
-    container_name: nestjs_redis
+    container_name: ta_cards_redis
     networks:
-      - nestjs_net
+      - games_net
     ports:
       - "6379:6379"
     volumes:
@@ -36,11 +36,11 @@ services:
     restart: always
 
   postgres:
-    container_name: nestjs_postgres
+    container_name: ta_cards_postgres
     image: postgres:12
     restart: always
     networks:
-      - nestjs_net
+      - games_net
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -52,7 +52,7 @@ services:
       - pgdata:/var/lib/postgresql/data
 
 networks:
-  nestjs_net:
+  games_net:
 volumes:
   pgdata:
   redis-data:

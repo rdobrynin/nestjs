@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { DeckController } from './deck.controller';
+import { DeckService } from './deck.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
@@ -10,14 +9,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ['.env', '.env.dev', '.env.stage', '.env.prod'],
-    }),
-    ThrottlerModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        ttl: config.get<number>('THROTTLE_TTL'),
-        limit: config.get<number>('THROTTLE_LIMIT'),
-      }),
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -40,7 +31,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       }),
     }),
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [DeckController],
+  providers: [DeckService],
 })
-export class AppModule {}
+export class DeckModule {}
