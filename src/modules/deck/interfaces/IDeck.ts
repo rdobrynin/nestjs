@@ -1,4 +1,4 @@
-import { DeckType } from '../../constants';
+import { DeckType } from '../constants';
 import { Card } from '../card';
 
 export interface IDeck {

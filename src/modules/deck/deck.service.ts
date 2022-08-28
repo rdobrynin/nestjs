@@ -10,20 +10,20 @@ import {
   CardRankHierarchyEnum,
   CardSuiteEnum,
   DeckType,
-} from '../constants';
+} from './constants';
 import * as _ from 'lodash';
 import { DeckNotFoundException } from './exceptions/deck-not-found.exception';
 import { DrawCardDto } from './dto/draw-card.dto';
 import { ExceedLimitCardsException } from './exceptions/exceed-limit-cards.exception';
 import { CardDtos } from './dto/card.dtos';
 import { CardDto } from './dto/card.dto';
-import { Repository } from 'typeorm';
+import { Repository } from "typeorm";
 
 @Injectable()
 export class DeckService {
   constructor(
     @InjectRepository(DeckEntity)
-    private deckEntityRepository: Repository<DeckEntity>,
+    private deckRepository: Repository<DeckEntity>,
   ) {}
 
   async createDeck(createDeckDto: CreateDeckDto): Promise<DeckDto> {
@@ -35,15 +35,13 @@ export class DeckService {
       isShuffled: createDeckDto.shuffled,
     });
 
-    await this.deckEntityRepository.save(deckEntity);
+    await this.deckRepository.save(deckEntity);
 
     return DeckDto.toDto(deckEntity);
   }
 
   async getById(id: string): Promise<DeckDto> {
-    const deckEntity: DeckEntity = await this.deckEntityRepository.findOneBy({
-      deckId: id,
-    });
+    const deckEntity = await this.deckRepository.findOneOrFail(id);
 
     if (!deckEntity) {
       throw new DeckNotFoundException();
@@ -53,9 +51,7 @@ export class DeckService {
   }
 
   async drawCard(drawCardDto: DrawCardDto): Promise<CardDtos> {
-    const deckEntity: DeckEntity = await this.deckEntityRepository.findOneBy({
-      deckId: drawCardDto.deckId,
-    });
+    const deckEntity = await this.deckRepository.findOneOrFail(drawCardDto.deckId)
 
     if (!deckEntity) {
       throw new DeckNotFoundException();
@@ -70,8 +66,8 @@ export class DeckService {
       deckEntity.cards.length,
     );
 
-    await this.deckEntityRepository.save(deckEntity);
-    await this.deckEntityRepository
+    await this.deckRepository.save(deckEntity);
+    await this.deckRepository
       .createQueryBuilder()
       .update()
       .set({ cards: cards })

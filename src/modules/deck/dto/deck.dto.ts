@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { DeckType } from '../../constants';
+import { DeckType } from '../constants';
 import { IDeck } from '../interfaces/IDeck';
 import { Card } from '../card';
 import { CardDto } from './card.dto';

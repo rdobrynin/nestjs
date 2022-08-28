@@ -1,5 +1,4 @@
-import { IsPositive } from 'class-validator';
-import { IsNumber, IsString } from 'nestjs-swagger-dto';
+import { IsNumber, IsPositive, IsString } from "class-validator";
 
 export class DrawCardDto {
   @IsString()

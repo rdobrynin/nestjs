@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { DeckType } from '../constants';
+import { DeckType } from './constants';
 import { IDeck } from './interfaces/IDeck';
 import { Card } from './card';
 

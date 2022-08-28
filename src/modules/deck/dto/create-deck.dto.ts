@@ -1,4 +1,4 @@
-import { DeckType } from '../../constants';
+import { DeckType } from '../constants';
 import { IsBoolean, IsEnum, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
