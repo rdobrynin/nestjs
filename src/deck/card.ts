@@ -1,6 +1,6 @@
-import { CardRankHierarchyEnum, CardSuiteHierarchyEnum } from '../constants';
+import { CardRankHierarchyEnum, CardSuiteEnum } from '../constants';
 
 export class Card {
-  public suit: CardSuiteHierarchyEnum;
+  public suit: CardSuiteEnum;
   public rank: CardRankHierarchyEnum;
 }

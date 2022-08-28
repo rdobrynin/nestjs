@@ -1,10 +1,9 @@
 import { DeckType } from '../../constants';
-import { IAbstractEntity } from '../../common/entities';
-import { DeckDto } from '../dto/deck.dto';
 import { Card } from '../card';
 
-export interface IDeck extends IAbstractEntity<DeckDto> {
+export interface IDeck {
+  deckId: string;
   type: DeckType;
-  isShuffled: boolean;
+  shuffled: boolean;
   cards: Card[];
 }

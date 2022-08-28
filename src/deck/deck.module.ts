@@ -9,7 +9,7 @@ import { DeckEntity } from './deck.entity';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ['.env', '.env.dev', '.env.stage', '.env.prod'],
+      envFilePath: ['.env'],
     }),
     TypeOrmModule.forFeature([DeckEntity]),
     TypeOrmModule.forRootAsync({

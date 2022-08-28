@@ -1,14 +1,13 @@
-import { Entity, Column } from 'typeorm';
-import { AbstractEntity } from '../common/entities';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 import { DeckType } from '../constants';
-import { UseDto } from '../common/decorators';
-import { DeckDto } from './dto/deck.dto';
 import { IDeck } from './interfaces/IDeck';
 import { Card } from './card';
 
 @Entity({ name: 'decks' })
-@UseDto(DeckDto)
-export class DeckEntity extends AbstractEntity<DeckDto> implements IDeck {
+export class DeckEntity implements IDeck {
+  @PrimaryGeneratedColumn('uuid')
+  deckId: string;
+
   @Column({
     type: 'enum',
     enum: DeckType,
@@ -20,5 +19,5 @@ export class DeckEntity extends AbstractEntity<DeckDto> implements IDeck {
   cards: Card[];
 
   @Column({ default: false })
-  isShuffled: boolean;
+  shuffled: boolean;
 }

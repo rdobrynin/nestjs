@@ -6,6 +6,7 @@ import { DeckEntity } from '../src/deck/deck.entity';
 import * as sinon from 'sinon';
 import { Repository } from 'typeorm';
 import { DrawCardDto } from '../src/deck/dto/draw-card.dto';
+import { DeckDto } from '../src/deck/dto/deck.dto';
 
 describe('Testing app.service', () => {
   let module: TestingModule;
@@ -13,7 +14,7 @@ describe('Testing app.service', () => {
 
   class SpyRepo {
     save(deckEntity: DeckEntity) {
-      return deckEntity;  
+      return deckEntity;
     }
     findOneBy(deckEntity: DeckEntity) {
       return deckEntity;
@@ -46,7 +47,7 @@ describe('Testing app.service', () => {
 
   it('Should be defined POST createDeck  and called with', async () => {
     const createDeskSpy = jest.spyOn(service, 'createDeck');
-    await service.createDeck({
+    const t: DeckDto = await service.createDeck({
       type: DeckType.FULL,
       shuffled: true,
     });
@@ -54,24 +55,27 @@ describe('Testing app.service', () => {
       type: DeckType.FULL,
       shuffled: true,
     });
+    // const getByIdSpy = jest.spyOn(service, 'getById');
+    // await service.getById(t.deckId);
+    // expect(getByIdSpy).toHaveBeenCalledWith(t.deckId);
   });
 
-  it('Should be defined GET getById and called with', async () => {
-    const getByIdSpy = jest.spyOn(service, 'getById');
-    const deskId = '549b4b17-467c-415c-93fa-a33586424bd5';
-    await service.getById(deskId);
-    expect(getByIdSpy).toHaveBeenCalledWith(deskId);
-  });
-
-  it('Should be defined POST drawCard and called with', async () => {
-    const getByIdSpy = jest.spyOn(service, 'drawCard');
-    const drawCard: DrawCardDto = {
-      deckId: '549b4b17-467c-415c-93fa-a33586424bd5',
-      amount: 2,
-    };
-    await service.drawCard(drawCard);
-    expect(getByIdSpy).toHaveBeenCalledWith(drawCard);
-  });
+  // it('Should be defined GET getById and called with', async () => {
+  //   const getByIdSpy = jest.spyOn(service, 'getById');
+  //   const deskId = '549b4b17-467c-415c-93fa-a33586424bd5';
+  //   await service.getById(t.);
+  //   expect(getByIdSpy).toHaveBeenCalledWith(deskId);
+  // });
+  //
+  // it('Should be defined POST drawCard and called with', async () => {
+  //   const getByIdSpy = jest.spyOn(service, 'drawCard');
+  //   const drawCard: DrawCardDto = {
+  //     deckId: '549b4b17-467c-415c-93fa-a33586424bd5',
+  //     amount: 2,
+  //   };
+  //   await service.drawCard(drawCard);
+  //   expect(getByIdSpy).toHaveBeenCalledWith(drawCard);
+  // });
 
   afterAll(async () => {
     sandbox.restore();

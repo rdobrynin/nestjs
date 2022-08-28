@@ -8,7 +8,7 @@ import { plainToClass } from 'class-transformer';
 import {
   CardRank,
   CardRankHierarchyEnum,
-  CardSuiteHierarchyEnum,
+  CardSuiteEnum,
   DeckType,
 } from '../constants';
 import * as _ from 'lodash';
@@ -37,24 +37,24 @@ export class DeckService {
 
     await this.deckEntityRepository.save(deckEntity);
 
-    return deckEntity.toDto();
+    return DeckDto.toDto(deckEntity);
   }
 
   async getById(id: string): Promise<DeckDto> {
     const deckEntity: DeckEntity = await this.deckEntityRepository.findOneBy({
-      id: id,
+      deckId: id,
     });
 
     if (!deckEntity) {
       throw new DeckNotFoundException();
     }
 
-    return deckEntity.toDto();
+    return DeckDto.toDto(deckEntity);
   }
 
   async drawCard(drawCardDto: DrawCardDto): Promise<CardDtos> {
     const deckEntity: DeckEntity = await this.deckEntityRepository.findOneBy({
-      id: drawCardDto.deckId,
+      deckId: drawCardDto.deckId,
     });
 
     if (!deckEntity) {
@@ -75,7 +75,7 @@ export class DeckService {
       .createQueryBuilder()
       .update()
       .set({ cards: cards })
-      .where('id = :deckId', {
+      .where('deckId = :deckId', {
         deckId: drawCardDto.deckId,
       })
       .execute();
@@ -90,13 +90,13 @@ export class DeckService {
 
     for (const rank of CardRank) {
       if (
-        rank < CardRankHierarchyEnum._6 &&
+        rank < CardRankHierarchyEnum._7 &&
         createDeckDto.type != DeckType.FULL
       ) {
         continue;
       }
-      for (const suit in CardSuiteHierarchyEnum) {
-        cards.push({ rank: rank, suit: suit as CardSuiteHierarchyEnum });
+      for (const suit in CardSuiteEnum) {
+        cards.push({ rank: rank, suit: suit as CardSuiteEnum });
       }
     }
 
